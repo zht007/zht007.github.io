@@ -19,9 +19,9 @@
 
   <!-- 页面元数据 -->
   
-  <title>【教程】Tensorflow vs PyTorch —— 基本操作 - Hongtao&#39;s Blog</title>
+  <title>强化学习：自动驾驶——Carla 模拟器简介 - Hongtao&#39;s Blog</title>
   
-    <meta name="keywords" content="tutorial,tensorflow,pytorch">
+    <meta name="keywords" content="RL,ML">
   
 
   
@@ -358,7 +358,7 @@
     
     
       <h1 class="title">
-        【教程】Tensorflow vs PyTorch —— 基本操作
+        强化学习：自动驾驶——Carla 模拟器简介
       </h1>
       <div class='new-meta-box'>
         
@@ -382,7 +382,7 @@
             <div class="new-meta-item date">
   <a class='notlink'>
     <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：Feb 13, 2020</p>
+    <p>发布于：Jan 14, 2020</p>
   </a>
 </div>
 
@@ -393,7 +393,7 @@
   <div class="new-meta-item browse leancloud">
     <a class='notlink'>
       
-      <div id="lc-pv" data-title="【教程】Tensorflow vs PyTorch —— 基本操作" data-path="/2020/02/13/%E3%80%90%E6%95%99%E7%A8%8B%E3%80%91Tensorflow%20vs%20PyTorch%20%E2%80%94%E2%80%94%20%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">
+      <div id="lc-pv" data-title="强化学习：自动驾驶——Carla 模拟器简介" data-path="/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%EF%BC%9A%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E2%80%94%E2%80%94Carla%20%E6%A8%A1%E6%8B%9F%E5%99%A8%E7%AE%80%E4%BB%8B/">
         <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
         <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
         次浏览
@@ -410,99 +410,94 @@
 
 
   
-  <p><img src="https://tva1.sinaimg.cn/large/0082zybpgy1gbv9dxirq2j30rs0hdn1p.jpg" class="lazyload" data-srcset="https://tva1.sinaimg.cn/large/0082zybpgy1gbv9dxirq2j30rs0hdn1p.jpg" srcset="data:image/png;base64,666" alt="pool near seashore with people swimming"></p>
-<p>Tensorflow 和 PyTorch 的基本操作非常类似，大多数方法都是相通的，如果有 numpy 的基础，掌握起来就更加容易了。基本操作涉及到张量的初始化，切片索引，维度变换和合并拆分等。</p>
-<h3 id="1-初始化"><a href="#1-初始化" class="headerlink" title="1. 初始化"></a>1. 初始化</h3><p>Tensorflow 和 PyTorch 的导入，查看版本，是否有GPU支持等非常简单代码如下：</p>
-<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gbklazmyxuj312w086jse.jpg" class="lazyload" data-srcset="https://tva1.sinaimg.cn/large/006tNbRwgy1gbklazmyxuj312w086jse.jpg" srcset="data:image/png;base64,666" alt="image-20200204112424027"></p>
-<h3 id="2-创建张量"><a href="#2-创建张量" class="headerlink" title="2. 创建张量"></a>2. 创建张量</h3><p>在数学和物理概念中，有<strong>标量 Scaler，向量 Vector, 矩阵 Matrix 和张量 Tensor</strong> 之分。但我们这里为了简单和统一，将数据均称为张量。</p>
-<p>Tensorflow 和 PyTorch 张量初始化可以直接分别调用：<code> tf.constent</code> 方法，调用 <code>torch.tensor</code> 方法，填入张量数值即可。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ------------------------Tensorflow -----------------------------</span></span><br><span class="line"><span class="comment">#  dim = 0 </span></span><br><span class="line">a = tf.constant(<span class="number">2.4</span>)</span><br><span class="line"><span class="comment">#  dim = 1 </span></span><br><span class="line">a = tf.constant([<span class="number">2.4</span>])</span><br><span class="line"><span class="comment"># dim = 2</span></span><br><span class="line">b = tf.constant([[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">3</span>,<span class="number">4</span>]])</span><br><span class="line"></span><br><span class="line"><span class="comment"># ------------------------PyTorch ------------------------------------</span></span><br><span class="line"><span class="comment">#  dim = 0 </span></span><br><span class="line">a = torch.tensor(<span class="number">2.4</span>)</span><br><span class="line"><span class="comment"># dim = 1 </span></span><br><span class="line">a = torch.tensor([<span class="number">2.4</span>])</span><br><span class="line"><span class="comment"># dim = 2</span></span><br><span class="line">b = torch.tensor([[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">3</span>,<span class="number">4</span>]])</span><br></pre></td></tr></table></figure>
-
-<p>也可分别创建 <code>tf.Variable</code>, <code>torch.Tensor</code> 对象，实现张量初始化。但是这里需要注意两点:</p>
+  <p>自动驾驶是机器学习的一个重要的应用领域，作为普通学习者，我们是否可以运用自己学到的机器学习方法训练自动驾驶模型，完成自动驾驶的任务呢？是否需要一辆真实的汽车和真实的马路环境呢？</p>
+<p>对于普通学习者来说，我们当然没有必要去驾驶真实的汽车。使用模拟器可以大大降低自动驾驶研究的门槛，这篇文章我们就简单地介绍一下 <a target="_blank" rel="noopener" href="http://carla.org/">Carla</a> 这个开源的用于自动驾驶研究的开源模拟器。</p>
+<h3 id="1-CARLA-简介"><a href="#1-CARLA-简介" class="headerlink" title="1. CARLA 简介"></a>1. CARLA 简介</h3><p>Carla 是一个开源的模拟器，可以模拟真实的交通环境，行人行为，汽车传感器信号等等。如下图所示，模拟器使用C++ 和虚幻 (Unreal) 引擎构成，使用者可以通过 Python API 使用 Python 脚本代码对模拟器的环境进行操作和控制。</p>
+<p><img src="https://carla.readthedocs.io/en/latest/img/carla_modules.png" class="lazyload" data-srcset="https://carla.readthedocs.io/en/latest/img/carla_modules.png" srcset="data:image/png;base64,666" alt="CARLA Modules"></p>
+<p><em>image from <a target="_blank" rel="noopener" href="https://carla.readthedocs.io/en/latest/getting_started/">carla</a> with MIT license</em> </p>
+<h3 id="2-CARLA-简单上手"><a href="#2-CARLA-简单上手" class="headerlink" title="2. CARLA 简单上手"></a>2. CARLA 简单上手</h3><p>CARLA的快速上手指南请参考<a target="_blank" rel="noopener" href="https://carla.readthedocs.io/en/latest/getting_started/">官方文档</a>， 本文仅做简单介绍和总结</p>
 <blockquote>
 <ol>
-<li><code>tf.Variable</code> 创建的是<code>Variable</code>对象 ，不是<code>Tensor</code>对象，前者可以跟踪求梯度，后者不能直接求梯度。</li>
-<li><code>torch.tensor </code>和 <code>torch.Tensor</code> 均创建的是 <code>Tensor</code> 对象，但前者输入具体数值，后者输入 Tensor shape(size)，数值不可控，不推荐</li>
+<li>CARLA 目前仅支持 Linux 和 Windows，需要去<a target="_blank" rel="noopener" href="https://github.com/carla-simulator/carla/blob/master/Docs/download.md">下载</a>相应的版本。在本文写作的时间，Windows 仅支持到 0.9.5 版本，Linux 支持到0.9.6。</li>
+<li>需要 安装 numpy 和 pygame.</li>
+<li>下载解压文件夹之后，Windows 环境下直接运行 “CarlaUE4.exe” 文件，linux 环境下 终端命令： “./CarlaUE4.sh” 即可打开模拟器。</li>
 </ol>
 </blockquote>
-<p>推荐初始化方法</p>
+<p>模拟器就是一个小镇的环境，有道路，建筑，街道，交通灯等等。不过目前是没有行人和车辆的。需要运行 python 脚本代码。</p>
+<p>终端 cd 到 \PythonAPI\examples 目录，里面有不少python 脚本实例，首先我们运行 spawn_npc.py 可以在模拟器中增加 80 俩汽车。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python spawn_npc.py -n <span class="number">80</span></span><br></pre></td></tr></table></figure>
+
+<p>也可以运行这个脚本添加天气变量(天黑，下雨，刮风等)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python dynamic_weather.py</span><br></pre></td></tr></table></figure>
+
+<p>当然也可以体验一下手动驾驶汽车的感觉，仅需要运行这个脚本就可以了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manual_control.py</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://carla.readthedocs.io/en/latest/img/manual_control.png" class="lazyload" data-srcset="https://carla.readthedocs.io/en/latest/img/manual_control.png" srcset="data:image/png;base64,666" alt="manual_control.py"></p>
+<p><em>image from <a target="_blank" rel="noopener" href="https://carla.readthedocs.io/en/latest/getting_started/">carla</a> with MIT license</em> </p>
+<p>如上图所示，可以像玩游戏一样手动操作窗口中汽车前进、后退、转弯和刹车等动作，同时环境的及时反馈也可以收集到。可以感应到周围车辆的大小，交通灯信号，是否有撞击等等。</p>
+<p>当然你也可以用快捷键 P 让汽车处于自动驾驶状态。不过需要注意的是，此时汽车的自动驾驶并不是通过机器学习得到的模型，而是通过对模拟器中设置的汽车行驶交通规则实现的。</p>
 <blockquote>
+<p>注意如果在运行脚本的时候出现导入 carla 失败的错误，请检测python版本。在PythonAPI\carla\dist 目录中可以看到相应的python 版本的.egg 文件。笔者使用的是0.9.5 版本 carla 其中 Windows 10 需要使用 python 3.7. Linux 需要使用 python 3.5.</p>
+</blockquote>
+<h3 id="3-Python-控制汽车快速上手"><a href="#3-Python-控制汽车快速上手" class="headerlink" title="3. Python 控制汽车快速上手"></a>3. Python 控制汽车快速上手</h3><p>为了便于进后机器学习的需要，本文我们快速在模拟器中创建一辆汽车，并让他直线行驶，通过摄像头将感知到的图片显示出来。之后我们便可用摄像头收集到的图像信息以及汽车在环境中的反馈训练（强化学习）模型，完成自动驾驶的任务。详细指南请参考官方 Python API 指南。</p>
 <ol>
-<li>直接从 numpy.arrary 转换成 Tensor </li>
-<li>使用，zeros, ones 和 eye 分别创建 0， 1 和 对角张量。</li>
-<li>随机初始化 <code>tf.random.uniform</code>,<code> tf.random.normal</code>l; <code>torch.rand</code></li>
+<li>初始化环境。创建 Client 连接模拟器的服务器，并通过 “blueprint” 创建一个汽车blueprint。</li>
 </ol>
-</blockquote>
-<p>Tensorflow 和 PyTorch 的张量均可以通过 <code>.numpy()</code> 转换成 <code>numpy.arrary</code>，PyTorch 还可以使用<code>.tolist()</code> 转换成list</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ------------------------Tensorflow ------------------------</span></span><br><span class="line">a = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line">aa = tf.Variable(a)</span><br><span class="line"></span><br><span class="line">aa.numpy()</span><br><span class="line">aa.numpy().tolist()</span><br><span class="line"></span><br><span class="line">b = tf.ones(shape=[<span class="number">3</span>,<span class="number">3</span>])</span><br><span class="line">c = tf.zeros(shape=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line">d = tf.eye(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">e = tf.random.uniform([<span class="number">3</span>,<span class="number">3</span>],</span><br><span class="line">                     minval=<span class="number">-1</span>,</span><br><span class="line">                     maxval= <span class="number">1</span>)</span><br><span class="line">f = tf.random.normal([<span class="number">3</span>,<span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">g = tf.fill(dims=[<span class="number">3</span>,<span class="number">3</span>], value=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ------------------------ PyTorch ------------------------</span></span><br><span class="line">a = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line">aa = torch.from_numpy(a)</span><br><span class="line"></span><br><span class="line">aa.numpy()</span><br><span class="line">aa.tolist()</span><br><span class="line">aa[<span class="number">0</span>].item()</span><br><span class="line"></span><br><span class="line">b = torch.ones([<span class="number">3</span>,<span class="number">3</span>])</span><br><span class="line">c = torch.zeros([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line">d = torch.eye(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">e = torch.rand([<span class="number">3</span>,<span class="number">3</span>]) *<span class="number">2</span> <span class="number">-1</span></span><br><span class="line">f = torch.tensor(np.random.normal( size= [<span class="number">3</span>,<span class="number">3</span>]))</span><br><span class="line"></span><br><span class="line">h = torch.full([<span class="number">3</span>,<span class="number">3</span>],fill_value = <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># set up the environment</span></span><br><span class="line">client = carla.Client(<span class="string">&quot;localhost&quot;</span>, <span class="number">2000</span>)</span><br><span class="line">client.set_timeout(<span class="number">2.0</span>)</span><br><span class="line">world = client.get_world()</span><br><span class="line">blueprint_library = world.get_blueprint_library()</span><br><span class="line">bp = blueprint_library.filter(<span class="string">&quot;model3&quot;</span>)[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
 
-
-
-<h3 id="3-切片和索引"><a href="#3-切片和索引" class="headerlink" title="3. 切片和索引"></a>3. 切片和索引</h3><p>Tensorflow 和 PyTorch 切片和索引与 numpy.array 非常类似这里就不赘述了。注意掌握以下两个原则：</p>
-<blockquote>
-<ol>
-<li>索引格式 <strong>start​ : end : step​</strong> 其中 end 不包括在内。</li>
-<li>中间若要省略过多冒号，可用 … 代替</li>
+<ol start="2">
+<li>初始化汽车，在模拟器世界中，随机出现一辆汽车</li>
 </ol>
-</blockquote>
-<h3 id="4-维度变换"><a href="#4-维度变换" class="headerlink" title="4. 维度变换"></a>4. 维度变换</h3><h4 id="4-1-Reshape"><a href="#4-1-Reshape" class="headerlink" title="4.1 Reshape"></a>4.1 Reshape</h4><p>Tensorflow 和 PyTorch 均可用 <code>reshape</code> 方法变换维度。PyTorch 还有一个 <code>view</code> 方法，与<code>reshape</code> 方法效果一样。</p>
-<blockquote>
-<p>需要注意的是</p>
-<ol>
-<li>Tensorflow 是调用 tf.reshape, PyTorch 可以直接对 Tensor 本身进行操作。 </li>
-<li>Reshape 操作不会改变数据的存储顺序。</li>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spawn_point = random.choice(world.get_map().get_spawn_points())</span><br><span class="line">vehicle = world.spawn_actor(bp,spawn_point)</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>控制汽车，当然你可以用自动驾驶模式”vehicle.set_autopilot(True)”让汽车根据模拟器制定的规则行驶，不过我们在这里让汽车直行</li>
 </ol>
-</blockquote>
-<p>另外可以 Tensorfow 和 PyTorch 可以分别使用<code> tf.expand_dim</code> 和 <code>.unsqueeze</code> 方法增加维度。分别使用 <code>tf.squeeze</code> 和 <code>.squeeze </code>方法删除维度。</p>
-<blockquote>
-<p>注意增加和删除的维度在该维度 (Aix) 上数值为 1，表现在数据上就是增加和删除了括号而已，并不会对数据的存储顺序造成影响。</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ------------------------Tensorflow ----------------------</span></span><br><span class="line">x = tf.random.uniform([<span class="number">5</span>,<span class="number">28</span>,<span class="number">28</span>,<span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">print(tf.reshape(x, [<span class="number">5</span>, <span class="number">28</span>*<span class="number">28</span>, <span class="number">3</span>]).shape)</span><br><span class="line">print(tf.reshape(x, [<span class="number">5</span>, <span class="number">14</span>, <span class="number">56</span>, <span class="number">3</span>]).shape)</span><br><span class="line">print(tf.expand_dims(x, axis=<span class="number">0</span>).shape)</span><br><span class="line"></span><br><span class="line">y = tf.expand_dims(x, axis=<span class="number">2</span>)</span><br><span class="line">print(y.shape)</span><br><span class="line">print(tf.squeeze(y, axis=<span class="number">2</span>).shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ------------------------ PyTorch ------------------------</span></span><br><span class="line">x = torch.rand([<span class="number">5</span>,<span class="number">3</span>,<span class="number">28</span>,<span class="number">28</span>])</span><br><span class="line"></span><br><span class="line">print(x.view(<span class="number">5</span>,<span class="number">3</span>,<span class="number">28</span>*<span class="number">28</span>).shape)</span><br><span class="line">print(x.reshape(<span class="number">5</span>,<span class="number">3</span>,<span class="number">28</span>*<span class="number">28</span>).shape)</span><br><span class="line">print(torch.reshape(x,[<span class="number">5</span>,<span class="number">3</span>,<span class="number">28</span>*<span class="number">28</span>]).shape)</span><br><span class="line"></span><br><span class="line">y = x.unsqueeze(<span class="number">2</span>)</span><br><span class="line">print(y.shape)</span><br><span class="line">print(y.squeeze(<span class="number">2</span>).shape)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vehicle.apply_control(carla.VehicleControl(throttle=<span class="number">1.0</span>,steer=<span class="number">0.0</span>)) <span class="comment"># car go straight</span></span><br><span class="line">actor_list.append(vehicle)</span><br></pre></td></tr></table></figure>
 
-<h4 id="4-2-交换维度"><a href="#4-2-交换维度" class="headerlink" title="4.2 交换维度"></a>4.2 交换维度</h4><p>交换维度是非常常见的操作，比如 Tensorflow 中图片的存储方式通常是 [b, w, h, c] 而 PyTorch 则为 [b, c, w, h]</p>
-<blockquote>
-<p>b, w, h, c 分别代表 batch, width, height, channel. （批，宽，高，通道）</p>
-</blockquote>
-<p>Tensorflow 和 PyTorch 均可使用 <code>transpose</code> 的方法交换维度，但是实现方法有所差异，PyTorch 推荐使用 <code>permute</code> 方法，该方法与<code> tf.transpose</code> 方法一致。</p>
-<blockquote>
-<p> 交换维度会改变数据存储顺序，谨慎使用。</p>
-</blockquote>
-<p>该部分参考代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ------------------------Tensorflow ----------------------</span></span><br><span class="line"><span class="comment"># Change dim [b,w,h,c] -&gt; [b,c,w,h]</span></span><br><span class="line"></span><br><span class="line">z = tf.transpose(x,perm=[<span class="number">0</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">2</span>])</span><br><span class="line">print(<span class="string">&#x27;z shape&#x27;</span>, z.shape)</span><br><span class="line"><span class="comment"># ------------------------ PyTorch ------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># exchange dim [b, c, w, h] -&gt; [b, w, h, c]</span></span><br><span class="line">z = x.transpose(<span class="number">1</span>, <span class="number">2</span>).transpose(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">print(x.permute(<span class="number">0</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">2</span>).shape)</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>设置摄像头</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cam_bp = blueprint_library.find(<span class="string">&quot;sensor.camera.rgb&quot;</span>)</span><br><span class="line">cam_bp.set_attribute(<span class="string">&quot;image_size_x&quot;</span>, <span class="string">&quot;&#123;&#125;&quot;</span>.format(IM_WIDTH))</span><br><span class="line">cam_bp.set_attribute(<span class="string">&quot;image_size_y&quot;</span>, <span class="string">&quot;&#123;&#125;&quot;</span>.format(IM_HEIGHT))</span><br><span class="line">cam_bp.set_attribute(<span class="string">&quot;fov&quot;</span>,<span class="string">&quot;110&quot;</span>) <span class="comment">#&quot;fov&quot; feel of view</span></span><br><span class="line">spawn_point = carla.Transform(carla.Location(x=<span class="number">2.5</span>,z=<span class="number">0.7</span>)) <span class="comment">#locate the camera</span></span><br><span class="line">sensor = world.spawn_actor(cam_bp, spawn_point, attach_to = vehicle)</span><br><span class="line">actor_list.append(sensor)</span><br></pre></td></tr></table></figure>
 
-<h3 id="5-Broadcasting"><a href="#5-Broadcasting" class="headerlink" title="5. Broadcasting"></a>5. Broadcasting</h3><p>Broadcasting 是一个自动复制张量的手段，在深度学习中，通常我们需要将标量的偏置 (Bias) Broadcast 到与权重 (Weight) 一致。</p>
-<p>Tensorflow 和 PyTorch 均可自动完成这个操作。 当然我们也可以分别使用 <code>tf.broadcast_to</code>,<code>.expand</code> 方法手动实现。</p>
+<ol start="5">
+<li><p>获取摄像头图片，这里通过 .listen 的 lambda 函数传回数据。当然不要忘了设计一个延时。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sensor.listen(<span class="keyword">lambda</span> data: process_img(data))</span><br><span class="line"></span><br><span class="line">time.sleep(<span class="number">25</span>)</span><br></pre></td></tr></table></figure>
+
+<p>其中通过 process_img() 方法传回摄像头图像</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_img</span>(<span class="params">image</span>):</span></span><br><span class="line">    i = np.array(image.raw_data)</span><br><span class="line">    <span class="comment"># print(i.shape)</span></span><br><span class="line">    i2 = i.reshape((IM_HEIGHT,IM_WIDTH,<span class="number">4</span>)) <span class="comment">#4 changels &quot;rgba&quot;</span></span><br><span class="line">    i3 = i2[:,:,:<span class="number">3</span>] <span class="comment"># 3 changels &quot;rgb&quot;</span></span><br><span class="line"></span><br><span class="line">    cv2.imshow(<span class="string">&quot;&quot;</span>,i3)</span><br><span class="line">    cv2.waitKey(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> i3/<span class="number">255.0</span></span><br></pre></td></tr></table></figure>
+
 <blockquote>
-<p>注意 Broadcasting 只能将维度(轴)上数值为1的地方复制 n 遍。</p>
+<p>这里需要注意的是，摄像头得到的图片有4个通道 “rgba”，需要将第四个通道去掉，并用opencv 的 cv2.imshow() 将摄像头捕捉到的图片 归一化之后回传回来。</p>
 </blockquote>
-<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gbkng8hlzlj313406u0u2.jpg" class="lazyload" data-srcset="https://tva1.sinaimg.cn/large/006tNbRwgy1gbkng8hlzlj313406u0u2.jpg" srcset="data:image/png;base64,666" alt="image-20200204123843502"></p>
-<h3 id="6-合并拆分"><a href="#6-合并拆分" class="headerlink" title="6. 合并拆分"></a>6. 合并拆分</h3><p>合并和拆分是非常常见的张量操作，对应的是 concat 和 split。Tensorflow 对应 <code>tf.concat</code>和<code>tf.split</code> PyTorch对应 <code>.cat</code> 和<code>.split</code>，这两个操作都不会改变张量的维度。</p>
-<p>举一个例子，一个3维张量对应 班级，学生，各科成绩 [classes, students, scores] ，我们可以在三个维度上对这个张量进行合并和拆分。</p>
-<blockquote>
-<ol>
-<li><p>如果在 dim/axis=0 上合并，既合并班级 ，此时 students, scores 维度上数值必须保持一致，既学生数量和科目数量必须保持一致。</p>
-</li>
-<li><p>如果在 dim/axis=1 上合并，既合并学生 ，此时 classes, scores 维度上数值必须保持一致，既班级数量和科目数量必须保持一致。</p>
-</li>
-<li><p>如果在 dim/axis=0 上合并，既合并成绩 ，此时 classes, student 维度上数值必须保持一致，既班级数量和学生数量必须保持一致。</p>
 </li>
 </ol>
-</blockquote>
-<p>拆分也是同样的道理，在传入参数的 <code>num_or_size_splits</code> 如果传入一个数字，既表示在该维度下每份的大小，如果传入的是一个 list, 既表示按照 list 中的大小进行拆分。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ------------------------Tensorflow -----------------------------</span></span><br><span class="line"><span class="comment"># Example [classes, students, scores] </span></span><br><span class="line"><span class="comment"># Concat dim = 0, </span></span><br><span class="line">a = tf.random.uniform([<span class="number">4</span>,<span class="number">32</span>,<span class="number">8</span>])</span><br><span class="line">b = tf.random.uniform([<span class="number">5</span>,<span class="number">32</span>,<span class="number">8</span>])</span><br><span class="line">print(tf.concat([a,b], axis=<span class="number">0</span>).shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Concat dim = 1, Same classes different students</span></span><br><span class="line">a = tf.random.uniform([<span class="number">4</span>,<span class="number">10</span>,<span class="number">8</span>])</span><br><span class="line">b = tf.random.uniform([<span class="number">4</span>,<span class="number">22</span>,<span class="number">8</span>])</span><br><span class="line">print(tf.concat([a,b], axis=<span class="number">1</span>).shape)</span><br><span class="line"></span><br><span class="line"><span class="comment">#Concat dim = 2, Same classes, students, different subjects</span></span><br><span class="line">a = tf.random.uniform([<span class="number">4</span>,<span class="number">32</span>,<span class="number">5</span>])</span><br><span class="line">b = tf.random.uniform([<span class="number">4</span>,<span class="number">32</span>,<span class="number">3</span>])</span><br><span class="line">print(tf.concat([a,b], axis=<span class="number">2</span>).shape)</span><br><span class="line"></span><br><span class="line">c = tf.random.uniform([<span class="number">9</span>,<span class="number">32</span>,<span class="number">8</span>])</span><br><span class="line"></span><br><span class="line">c1, c2 = tf.split(c,[<span class="number">3</span>,<span class="number">6</span>],axis=<span class="number">0</span>)</span><br><span class="line">print(c1.shape, c2.shape)</span><br><span class="line"></span><br><span class="line">c1, c2, c3 = tf.split(c,<span class="number">3</span>,axis=<span class="number">0</span>)</span><br><span class="line">print(c1.shape, c2.shape, c3.shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ------------------------ PyTorch ------------------------</span></span><br><span class="line"><span class="comment"># Example [classes, students, scores] </span></span><br><span class="line"><span class="comment"># Concat dim = 0, </span></span><br><span class="line">a = torch.rand(<span class="number">4</span>,<span class="number">32</span>,<span class="number">8</span>)</span><br><span class="line">b = torch.rand(<span class="number">5</span>,<span class="number">32</span>,<span class="number">8</span>)</span><br><span class="line">print(torch.cat([a,b], dim=<span class="number">0</span>).shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Concat dim = 1, Same classes different students</span></span><br><span class="line">a = torch.rand(<span class="number">4</span>,<span class="number">10</span>,<span class="number">8</span>)</span><br><span class="line">b = torch.rand(<span class="number">4</span>,<span class="number">22</span>,<span class="number">8</span>)</span><br><span class="line">print(torch.cat([a,b], dim=<span class="number">1</span>).shape)</span><br><span class="line"></span><br><span class="line"><span class="comment">#Concat dim = 2, Same classes, students, different subjects</span></span><br><span class="line">a = torch.rand(<span class="number">4</span>,<span class="number">32</span>,<span class="number">5</span>)</span><br><span class="line">b = torch.rand(<span class="number">4</span>,<span class="number">32</span>,<span class="number">3</span>)</span><br><span class="line">print(torch.cat([a,b], dim=<span class="number">2</span>).shape)</span><br><span class="line"></span><br><span class="line">c = torch.rand(<span class="number">9</span>,<span class="number">32</span>,<span class="number">8</span>)</span><br><span class="line"><span class="comment"># c1, c2 = torch.split(c,[3,6],dim=0)</span></span><br><span class="line">c1, c2 = c.split([<span class="number">3</span>,<span class="number">6</span>],dim=<span class="number">0</span>)</span><br><span class="line">print(c1.shape, c2.shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># c1, c2, c3 = torch.split(c,3,dim=0)</span></span><br><span class="line">c1, c2, c3 = c.split(<span class="number">3</span>,dim=<span class="number">0</span>)</span><br><span class="line">print(c1.shape, c2.shape, c3.shape)</span><br></pre></td></tr></table></figure>
-
-<p>另外还有一个概念需要区分就是 stack 和 unstack</p>
-<blockquote>
-<p>stack 会在相应维度前面新加一个维度，所以被 stack 的张量在每个维度上的大小必须一致。</p>
-<p>tf.unstack 会将该维度完全拆散，既[3,32,8] -&gt; axis=0 下 -&gt;unstack 为三个[32,8]的矩阵。</p>
-<p>torch.chunk 与split 概念一致，是指在该维度下<strong>均分</strong>为多少份</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ------------------------Tensorflow -----------------------------</span></span><br><span class="line">d1, d2, d3 = tf.unstack(c1,axis=<span class="number">0</span>)</span><br><span class="line">print(d1.shape, d2.shape, d3.shape)</span><br><span class="line"></span><br><span class="line">print(tf.stack([d1,d2,d3], axis=<span class="number">0</span>).shape)</span><br><span class="line">print(tf.stack([c1,c2,c3], axis=<span class="number">0</span>).shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Example [classes, students, scores] -&gt; [grades, classes, students, scores]</span></span><br><span class="line">a = tf.random.uniform([<span class="number">4</span>,<span class="number">32</span>,<span class="number">8</span>])</span><br><span class="line">b = tf.random.uniform([<span class="number">4</span>,<span class="number">32</span>,<span class="number">8</span>])</span><br><span class="line">print(tf.stack([a,b], axis=<span class="number">0</span>).shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ------------------------PyTorch -----------------------------</span></span><br><span class="line"><span class="comment"># c1, c2, c3 = torch.chunk(c,3,dim=0)</span></span><br><span class="line">c1, c2, c3 = c.chunk(<span class="number">3</span>,dim=<span class="number">0</span>)</span><br><span class="line">print(c1.shape, c2.shape, c3.shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Example [classes, students, scores] -&gt; [grades, classes, students, scores]</span></span><br><span class="line">a = torch.rand(<span class="number">4</span>,<span class="number">32</span>,<span class="number">8</span>)</span><br><span class="line">b = torch.rand(<span class="number">4</span>,<span class="number">32</span>,<span class="number">8</span>)</span><br><span class="line">print(torch.stack([a,b],dim=<span class="number">0</span>).shape)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
+<p>最后，我们运行一下这个python 脚本获取汽车直线前进，摄像头所“看到” 的画面。汽车直行然后撞在了隧道的墙壁上。</p>
+<p><img src="D:\Downloads\drive_and_crash.gif" class="lazyload" data-srcset="D:\Downloads\drive_and_crash.gif" srcset="data:image/png;base64,666" alt="drive_and_crash"></p>
+<p><em>gif animation created by @hongtao</em> </p>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><p>本文简单介绍了 Carla 这个开源自动驾驶的环境，并简单上手并实现了创建汽车，控制汽车直线运动，同时将汽车上摄像头捕捉的图像信号传回。后面我们将使用这些图像信号和环境的其他反馈，通过强化学习的方式训练模型，实现自动驾驶。</p>
+<hr>
+<p>参考资料</p>
+<p>[1] <a target="_blank" rel="noopener" href="http://incompleteideas.net/book/RLbook2018.pdf">Reinforcement Learning: An Introduction (2nd Edition)</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html">David Silver’s Reinforcement Learning Course (UCL, 2015)</a></p>
+<p>[3] <a target="_blank" rel="noopener" href="https://github.com/dennybritz/reinforcement-learning">Github repo: Reinforcement Learning</a></p>
+<hr>
+<p>相关文章</p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/cn-stem/@hongtao/keras-double-dqn">用 Keras 搭建 Double DQN 模型</a></p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/cn-stem/@hongtao/policy-gradient-cartpole">深度强化学习——Policy Gradient 玩转 CartPole 游戏</a></p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/cn-stem/@hongtao/mc-21">强化学习——MC(蒙特卡洛)玩21点扑克游戏</a></p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/cn-stem/@hongtao/dp-mdp">强化学习实战——动态规划(DP)求最优MDP</a></p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/7atbof">强化学习——强化学习的算法分类</a></p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/2bqdkd">强化学习——重拾强化学习的核心概念</a></p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-sarsa">AI学习笔记——Sarsa算法</a></p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-q-learning">AI学习笔记——Q Learning</a></p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-dynamic-programming-mdp-1">AI学习笔记——动态规划(Dynamic Programming)解决MDP(1)</a></p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-dynamic-programming-mdp-2">AI学习笔记——动态规划(Dynamic Programming)解决MDP(2)</a></p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-mdp-markov-decision-processes">AI学习笔记——MDP(Markov Decision Processes马可夫决策过程)简介</a></p>
+<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-mdp">AI学习笔记——求解最优MDP</a></p>
+<hr>
+<p>同步到我的简书<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/u/bd506afc6fc1">https://www.jianshu.com/u/bd506afc6fc1</a></p>
 
   
   
@@ -533,7 +528,7 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-10-14T20:48:36+01:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-10-14T22:05:38+01:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
     <p>更新于：Oct 14, 2020</p>
@@ -545,7 +540,7 @@
         
           
   
-  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/tutorial/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>tutorial</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/tensorflow/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>tensorflow</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/pytorch/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>pytorch</p></a></div>
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/RL/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>RL</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/ML/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>ML</p></a></div>
 
 
         
@@ -558,7 +553,7 @@
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://example.com/2020/02/13/%E3%80%90%E6%95%99%E7%A8%8B%E3%80%91Tensorflow%20vs%20PyTorch%20%E2%80%94%E2%80%94%20%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/&title=【教程】Tensorflow vs PyTorch —— 基本操作 - Hongtao's Blog&summary="
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://example.com/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%EF%BC%9A%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E2%80%94%E2%80%94Carla%20%E6%A8%A1%E6%8B%9F%E5%99%A8%E7%AE%80%E4%BB%8B/&title=强化学习：自动驾驶——Carla 模拟器简介 - Hongtao's Blog&summary="
           
           >
           
@@ -570,7 +565,7 @@
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://example.com/2020/02/13/%E3%80%90%E6%95%99%E7%A8%8B%E3%80%91Tensorflow%20vs%20PyTorch%20%E2%80%94%E2%80%94%20%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/&title=【教程】Tensorflow vs PyTorch —— 基本操作 - Hongtao's Blog&summary="
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://example.com/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%EF%BC%9A%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E2%80%94%E2%80%94Carla%20%E6%A8%A1%E6%8B%9F%E5%99%A8%E7%AE%80%E4%BB%8B/&title=强化学习：自动驾驶——Carla 模拟器简介 - Hongtao's Blog&summary="
           
           >
           
@@ -582,7 +577,7 @@
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://service.weibo.com/share/share.php?url=http://example.com/2020/02/13/%E3%80%90%E6%95%99%E7%A8%8B%E3%80%91Tensorflow%20vs%20PyTorch%20%E2%80%94%E2%80%94%20%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/&title=【教程】Tensorflow vs PyTorch —— 基本操作 - Hongtao's Blog&summary="
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://example.com/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%EF%BC%9A%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E2%80%94%E2%80%94Carla%20%E6%A8%A1%E6%8B%9F%E5%99%A8%E7%AE%80%E4%BB%8B/&title=强化学习：自动驾驶——Carla 模拟器简介 - Hongtao's Blog&summary="
           
           >
           
@@ -612,17 +607,13 @@
   
     <div class="prev-next">
       
-        <a class='prev' href='/2020/02/15/%E3%80%90%E6%95%99%E7%A8%8B%E3%80%91Tensorflow%20vs%20PyTorch%20%E2%80%94%E2%80%94%20%E6%95%B0%E5%AD%A6%E8%BF%90%E7%AE%97/'>
-          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>【教程】Tensorflow vs PyTorch —— 数学运算</p>
-          <p class='content'>掌握 Tensorflow 和 PyTorch 的基本数学运算操作，对后续机器学习和深度学习的学习十分重要。当然两者在这方面也十分相似。
-1. 基本数学运算基本数学运算即“加减乘除“，Tenso...</p>
+        <a class='prev' href='/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92(DP)%E6%B1%82%E6%9C%80%E4%BC%98MDP/'>
+          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>强化学习实战——动态规划(DP)求最优MDP</p>
+          <p class='content'>
+ image source from unsplash by Stijin te Strake
+之前的文章介绍了用动态规划(DP: Dynamic Programming)求解最优MDP的理论...</p>
         </a>
       
-      
-        <a class='next' href='/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%20Q-Learning%20%E7%8E%A9%20MountainCar%20%E7%88%AC%E5%9D%A1%E4%B8%8A%E5%B1%B1/'>
-          <p class='title'>强化学习—— Q-Learning 玩 MountainCar 爬坡上山<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
-          <p class='content'>之前的文章结合理论和实践熟悉了 Q-Learning 的经典算法，这篇文章我们基于 Open AI 的经典 MountainCar 环境。用 python 代码实现 Q-Learning  算法...</p>
-        </a>
       
     </div>
   
@@ -664,7 +655,7 @@
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">1. 初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%88%9B%E5%BB%BA%E5%BC%A0%E9%87%8F"><span class="toc-text">2. 创建张量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%88%87%E7%89%87%E5%92%8C%E7%B4%A2%E5%BC%95"><span class="toc-text">3. 切片和索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%BB%B4%E5%BA%A6%E5%8F%98%E6%8D%A2"><span class="toc-text">4. 维度变换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-Reshape"><span class="toc-text">4.1 Reshape</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-%E4%BA%A4%E6%8D%A2%E7%BB%B4%E5%BA%A6"><span class="toc-text">4.2 交换维度</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Broadcasting"><span class="toc-text">5. Broadcasting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%90%88%E5%B9%B6%E6%8B%86%E5%88%86"><span class="toc-text">6. 合并拆分</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-CARLA-%E7%AE%80%E4%BB%8B"><span class="toc-text">1. CARLA 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-CARLA-%E7%AE%80%E5%8D%95%E4%B8%8A%E6%89%8B"><span class="toc-text">2. CARLA 简单上手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Python-%E6%8E%A7%E5%88%B6%E6%B1%BD%E8%BD%A6%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="toc-text">3. Python 控制汽车快速上手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%80%BB%E7%BB%93"><span class="toc-text">4. 总结</span></a></li></ol>
     </div>
   </section>
 
@@ -684,7 +675,7 @@
 <script>
   window.pdata={}
   pdata.ispage=true;
-  pdata.postTitle="【教程】Tensorflow vs PyTorch —— 基本操作";
+  pdata.postTitle="强化学习：自动驾驶——Carla 模拟器简介";
   pdata.commentPath="";
   pdata.commentPlaceholder="";
 
