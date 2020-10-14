@@ -370,6 +370,12 @@
         
           
         
+          
+        
+          
+        
+          
+        
       
     
     
@@ -654,8 +660,8 @@ Tensorflow 和 PyTorch 之所以强大，是因为其自动求导的功能和自
   
     
     <h2 class="article-title" >
-      <a href="/2020/02/13/%E3%80%90%E6%95%99%E7%A8%8B%E3%80%91Tensorflow%20vs%20PyTorch%20%E2%80%94%E2%80%94%20%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">
-        【教程】Tensorflow vs PyTorch —— 基本操作
+      <a href="/2020/02/14/Tensorflow%202.0%20---%20RNN%20%E5%AE%9E%E6%88%98%E8%B7%AF%E9%80%8F%E7%A4%BE%E6%96%B0%E9%97%BB%E5%88%86%E7%B1%BB/">
+        Tensorflow 2.0 --- RNN 实战路透社新闻分类
       </a>
     </h2>
   
@@ -663,10 +669,10 @@ Tensorflow 和 PyTorch 之所以强大，是因为其自动求导的功能和自
     
       
         
-Tensorflow 和 PyTorch 的基本操作非常类似，大多数方法都是相通的，如果有 numpy 的基础，掌握起来就更加容易了。基本操作涉及到张量的初始化，切片索引，维度变换和合并拆分等。
-1. 初始化Tensorflow 和 PyTorch 的导入，查看版本，是否有GPU支持等非常简单代码如下：
-
-2. 创建张量在数学和物理概念中，有标量 Scaler，向量 Vector, 矩阵 ...
+Image from unsplash.com by @Jason_xj
+之前的文章我们介绍了 RNN 循环网络，并用循环网络成功地预测了牛奶产量。这篇文章我们继续使用 RNN 以及 LSTM 和 GRU 处理分类问题。我们使用的是 Keras 自带的数据集——路透社新闻分类问题。
+关注微信公众号获取源代码（二维码见文末）
+1. RNN 回顾与卷积神经网络处理空间局部相关性数据不同，循环网...
       
     
   </div>
@@ -674,12 +680,149 @@ Tensorflow 和 PyTorch 的基本操作非常类似，大多数方法都是相通
     <div class='meta-v3' line_style='solid'>
       <div>
         
-        <time>2020-02-13</time>
+        <time>2020-02-14</time>
         
       </div>
       
         <div>
-          <a class='readmore' href='/2020/02/13/%E3%80%90%E6%95%99%E7%A8%8B%E3%80%91Tensorflow%20vs%20PyTorch%20%E2%80%94%E2%80%94%20%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/'>
+          <a class='readmore' href='/2020/02/14/Tensorflow%202.0%20---%20RNN%20%E5%AE%9E%E6%88%98%E8%B7%AF%E9%80%8F%E7%A4%BE%E6%96%B0%E9%97%BB%E5%88%86%E7%B1%BB/'>
+            Read More
+          </a>
+        </div>
+      
+    </div>
+  
+
+</div>
+
+          </div>
+        
+      
+        
+          <div class='post-wrapper'>
+            <div class="post post-v3 white-box reveal shadow">
+  
+  
+  
+  
+    
+    <h2 class="article-title" >
+      <a href="/2020/02/14/Tensorflow%202.0%20---%20ResNet%20%E5%AE%9E%E6%88%98%20CIFAR100%20%E6%95%B0%E6%8D%AE%E9%9B%86/">
+        Tensorflow 2.0 --- ResNet 实战 CIFAR100 数据集
+      </a>
+    </h2>
+  
+  <div class='md'>
+    
+      
+        
+Image from unsplash.com by @ripato
+前面的文章我们学习了如何使用 Tensorflow 2.0 训练卷积神经网络，今天我们将学习如何用卷积神经网络的升级版 ResNet 来实战 CIFAR100 数据集。
+关注微信公众号获取源代码（二维码见文末）
+1. 深度神经网络的困扰自从2012 年，5层卷积神经网络在 ILSVRC12 挑战赛 ImageNet 数据...
+      
+    
+  </div>
+  
+    <div class='meta-v3' line_style='solid'>
+      <div>
+        
+        <time>2020-02-14</time>
+        
+      </div>
+      
+        <div>
+          <a class='readmore' href='/2020/02/14/Tensorflow%202.0%20---%20ResNet%20%E5%AE%9E%E6%88%98%20CIFAR100%20%E6%95%B0%E6%8D%AE%E9%9B%86/'>
+            Read More
+          </a>
+        </div>
+      
+    </div>
+  
+
+</div>
+
+          </div>
+        
+      
+        
+          <div class='post-wrapper'>
+            <div class="post post-v3 white-box reveal shadow">
+  
+  
+  
+  
+    
+    <h2 class="article-title" >
+      <a href="/2020/02/14/Tensorflow%202.0%20--%E4%B8%8EKeras%20%E7%9A%84%E6%B7%B1%E5%BA%A6%E8%9E%8D%E5%90%88/">
+        Tensorflow 2.0 --与Keras 的深度融合
+      </a>
+    </h2>
+  
+  <div class='md'>
+    
+      
+        
+image from unsplash by Zhang Kenny
+前面的几篇文章从线性回归，到手写数字识别再到预测牛奶产量，我们用 Tensorflow 2.0 与 Keras 结合完成了全链接神经网络，卷积神经网络以及循环神经网络的搭建和训练。那 Tensorflow 2.0 和 Keras 到底是什么关系，我们应该如何选择和搭配二者来完成自己的项目呢？这篇文章就来探讨一下这个问题。...
+      
+    
+  </div>
+  
+    <div class='meta-v3' line_style='solid'>
+      <div>
+        
+        <time>2020-02-14</time>
+        
+      </div>
+      
+        <div>
+          <a class='readmore' href='/2020/02/14/Tensorflow%202.0%20--%E4%B8%8EKeras%20%E7%9A%84%E6%B7%B1%E5%BA%A6%E8%9E%8D%E5%90%88/'>
+            Read More
+          </a>
+        </div>
+      
+    </div>
+  
+
+</div>
+
+          </div>
+        
+      
+        
+          <div class='post-wrapper'>
+            <div class="post post-v3 white-box reveal shadow">
+  
+  
+  
+  
+    
+    <h2 class="article-title" >
+      <a href="/2020/02/14/Tensorflow%202.0%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%20%E2%80%94%E2%80%94%20RNN%20%E9%A2%84%E6%B5%8B%E7%89%9B%E5%A5%B6%E4%BA%A7%E9%87%8F/">
+        Tensorflow 2.0 快速入门 —— RNN 预测牛奶产量
+      </a>
+    </h2>
+  
+  <div class='md'>
+    
+      
+        前面两篇文章我们通过线性回归和 MINST 手写识别的项目，学习了如何使用 Tensorflow 2.0 解决预测和分类的问题。同时也回顾了神经网络以及 CNN 的套路。这篇文章我们同样通过 RNN 的实例再次巩固一下 Tensorflow 2.0 的使用方法。
+关注微信公众号获取源代码（二维码见文末）
+1. Keras 方法回顾如下图所示，数据记录了1962年到1975年一共14年每个月牛...
+      
+    
+  </div>
+  
+    <div class='meta-v3' line_style='solid'>
+      <div>
+        
+        <time>2020-02-14</time>
+        
+      </div>
+      
+        <div>
+          <a class='readmore' href='/2020/02/14/Tensorflow%202.0%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%20%E2%80%94%E2%80%94%20RNN%20%E9%A2%84%E6%B5%8B%E7%89%9B%E5%A5%B6%E4%BA%A7%E9%87%8F/'>
             Read More
           </a>
         </div>
@@ -695,6 +838,21 @@ Tensorflow 和 PyTorch 的基本操作非常类似，大多数方法都是相通
     
   </section>
   
+    
+      <br>
+      <div class="prev-next">
+        
+        <p class="current">
+          1 / 2
+        </p>
+        
+          <a class="next" rel="next" href="/tags/tensorflow/page/2/">
+            <section class="post next white-box shadow">
+              &nbsp;Next&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </section>
+          </a>
+        
+      </div>
     
   
 
@@ -794,7 +952,7 @@ Tensorflow 和 PyTorch 的基本操作非常类似，大多数方法都是相通
 
 
     <div class='content'>
-      <a href="/tags/ML/" style="font-size: 14px; color: #999">ML</a> <a href="/tags/RL/" style="font-size: 14px; color: #999">RL</a> <a href="/tags/pytorch/" style="font-size: 14px; color: #999">pytorch</a> <a href="/tags/tensorflow/" style="font-size: 14px; color: #999">tensorflow</a> <a href="/tags/tutorial/" style="font-size: 14px; color: #999">tutorial</a>
+      <a href="/tags/ML/" style="font-size: 24px; color: #555">ML</a> <a href="/tags/RL/" style="font-size: 19px; color: #777">RL</a> <a href="/tags/pytorch/" style="font-size: 14px; color: #999">pytorch</a> <a href="/tags/tensorflow/" style="font-size: 24px; color: #555">tensorflow</a> <a href="/tags/tutorial/" style="font-size: 14px; color: #999">tutorial</a>
     </div>
   </section>
 

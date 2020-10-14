@@ -19,9 +19,9 @@
 
   <!-- 页面元数据 -->
   
-  <title>强化学习—— Q-Learning 玩 MountainCar 爬坡上山 - Hongtao&#39;s Blog</title>
+  <title>Tensorflow2.0--可视化工具：Tensorboard - Hongtao&#39;s Blog</title>
   
-    <meta name="keywords" content="ML,RL">
+    <meta name="keywords" content="ML,tensorflow">
   
 
   
@@ -358,7 +358,7 @@
     
     
       <h1 class="title">
-        强化学习—— Q-Learning 玩 MountainCar 爬坡上山
+        Tensorflow2.0--可视化工具：Tensorboard
       </h1>
       <div class='new-meta-box'>
         
@@ -382,7 +382,7 @@
             <div class="new-meta-item date">
   <a class='notlink'>
     <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：Jan 14, 2020</p>
+    <p>发布于：Feb 14, 2020</p>
   </a>
 </div>
 
@@ -393,7 +393,7 @@
   <div class="new-meta-item browse leancloud">
     <a class='notlink'>
       
-      <div id="lc-pv" data-title="强化学习—— Q-Learning 玩 MountainCar 爬坡上山" data-path="/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%20Q-Learning%20%E7%8E%A9%20MountainCar%20%E7%88%AC%E5%9D%A1%E4%B8%8A%E5%B1%B1/">
+      <div id="lc-pv" data-title="Tensorflow2.0--可视化工具：Tensorboard" data-path="/2020/02/14/Tensorflow2.0--%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7%EF%BC%9ATensorboard/">
         <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
         <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
         次浏览
@@ -410,67 +410,56 @@
 
 
   
-  <p>之前的文章结合理论和实践熟悉了 Q-Learning 的经典算法，这篇文章我们基于 Open AI 的经典 MountainCar 环境。用 python 代码实现 Q-Learning  算法，完成小车爬坡上山的挑战。</p>
-<p>同样的，为了方便与读者交流，所有的代码都放在了这里：</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/zht007/tensorflow-practice">https://github.com/zht007/tensorflow-practice</a></p>
-<h3 id="1-Gym-环境初始化"><a href="#1-Gym-环境初始化" class="headerlink" title="1. Gym 环境初始化"></a>1. Gym 环境初始化</h3><p>要熟悉 MountainCar-v0 的环境请参见官网以及<a target="_blank" rel="noopener" href="https://github.com/openai/gym/wiki/MountainCar-v0">官方的 github repo</a>. </p>
-<p>MountainCar-v0 的<strong>环境状态</strong>是由 其位置和速度决定的。<strong>行为 Action</strong> 有三个，向左 (0)，向右 (2)，无(1) 推车。<strong>奖励</strong>: 除了超过目的地 (位置为 0.5)， 其余地方的奖励均为 “-1”</p>
-<p>初始化 gym 环境的代码如下</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">env = gym.make(<span class="string">&quot;MountainCar-v0&quot;</span>)</span><br><span class="line">env.reset</span><br></pre></td></tr></table></figure>
+  <p><img src="https://images.unsplash.com/photo-1576289853729-0445e19a7e16?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80" class="lazyload" data-srcset="https://images.unsplash.com/photo-1576289853729-0445e19a7e16?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80" srcset="data:image/png;base64,666" alt="books in shelf"></p>
+<p><em>image from <a target="_blank" rel="noopener" href="https://unsplash.com/photos/kdUgoghLDAg">unsplash.com</a> by <a target="_blank" rel="noopener" href="https://unsplash.com/@tarahegerty">Tara Hegerty</a></em></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b0e98ee80a49">之前的文章</a>介绍过如何在 Keras 中快速调用 Tensorboard 这个可视化工具，这篇文章我们再深入探讨一下 Tensorboard 在T Tensorflow 2.0 下如何使用。</p>
+<p><em>本文源代码请关注微信公众号(二维码见文末)获取</em></p>
+<h3 id="1-Tensorboard-工作原理"><a href="#1-Tensorboard-工作原理" class="headerlink" title="1. Tensorboard 工作原理"></a>1. Tensorboard 工作原理</h3><p>简单来说，tensorboard 就是通过监听定目录下的 log 文件然后在 Web 端将 log 文件中需要监听的变量可视化出来的过程。</p>
+<p>所以，使用 Tensorflow 大致分为以下三步：</p>
+<blockquote>
+<ol>
+<li>创建监听目录 <code>logdir</code></li>
+<li>创建 <code>summary_writer</code> 对象写入 <code>logdir</code></li>
+<li>将数据写入到 <code>summary_writer</code> 中</li>
+</ol>
+</blockquote>
+<h3 id="2-Tensorboard-监听变量"><a href="#2-Tensorboard-监听变量" class="headerlink" title="2.  Tensorboard 监听变量"></a>2.  Tensorboard 监听变量</h3><p>我们用 Tensorboard 最多的就是实时观察 loss 和 accuracy 在训练过程中的变化，下面就以 MNIST 识别手写数字为例，介绍如何使用 Tensorboard.</p>
+<p>首先，创建监听目录和 <code>summary_witer</code> 目录名字加上时间戳，以避免混淆。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">current_time = datetime.datetime.now().strftime(<span class="string">&quot;%Y%m%d-%H%M%S&quot;</span>)</span><br><span class="line">log_dir = <span class="string">&#x27;logs/&#x27;</span> + current_time</span><br><span class="line">summary_writer = tf.summary.create_file_writer(log_dir)</span><br></pre></td></tr></table></figure>
 
-<p>当然强化学习中的参数不要忘了初始化</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LEARNING_RATE = <span class="number">0.5</span></span><br><span class="line">DISCOUNT = <span class="number">0.95</span></span><br><span class="line">EPISODES = <span class="number">10000</span></span><br><span class="line">SHOW_EVERY = <span class="number">500</span></span><br></pre></td></tr></table></figure>
+<p>然后，训练过程中将数据写入 <code>summary_witer</code> 中。这里我们将每个 epoch 中的 loss 和 accuracy 写入，仅需要在 epoch 的循环中加入以下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> summary_writer.as_default():</span><br><span class="line">  tf.summary.scalar(<span class="string">&quot;epoch_loss&quot;</span>, loss.numpy(), step=epoch)</span><br><span class="line">  tf.summary.scalar(<span class="string">&quot;epoch_test_acc&quot;</span>, accuracy, step=epoch)</span><br></pre></td></tr></table></figure>
 
-<p><em>Code from <a target="_blank" rel="noopener" href="https://github.com/zht007/tensorflow-practice/blob/master/10_Renforcement_Learning_Moutain_Car/1_q_learning_python_mountain_car.ipynb">Github Repo</a> with MIT lisence</em></p>
-<h3 id="2-Q-Table-的建立"><a href="#2-Q-Table-的建立" class="headerlink" title="2. Q-Table 的建立"></a>2. Q-Table 的建立</h3><p>Q表是用来指导每个状态的行动，由于该环境状态是连续的，我们需要将连续的状态分割成若干个离散的状态。状态的个数即为 Q 表的size。这里我们将Q表长度设为20，建立一个 20 x 20 x 3 的Q表。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DISCRETE_OS_SIZE = [Q_TABLE_LEN] * len(env.observation_space.high)</span><br><span class="line">discrete_os_win_size = (env.observation_space.high - env.observation_space.low) / DISCRETE_OS_SIZE</span><br><span class="line"></span><br><span class="line">q_table = np.random.uniform(low=<span class="number">0</span>, high=<span class="number">1</span>,</span><br><span class="line">                            size=(DISCRETE_OS_SIZE + [env.action_space.n]))</span><br></pre></td></tr></table></figure>
+<p>其他部分关于模型的建立，训练和测试，参考<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e68172ba8c91">之前的文章</a>，这里就不赘述了。</p>
+<p>当然，我们也可以监听每个 epoch 下，每(若干)个step，仅需要在 step 的循环中加入如下代码，注意，为了避免重复，监听变量的名字也加上了 epoch 的数字：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> summary_writer.as_default():</span><br><span class="line">  tf.summary.scalar(<span class="string">&quot;loss epoch: &quot;</span>+str(epoch), loss.numpy(), step = step)</span><br><span class="line">  tf.summary.scalar(<span class="string">&quot;test_acc epoch: &quot;</span>+str(epoch), accuracy, step = step)</span><br></pre></td></tr></table></figure>
 
-<p>Code from <a target="_blank" rel="noopener" href="https://github.com/zht007/tensorflow-practice/blob/master/10_Renforcement_Learning_Moutain_Car/1_q_learning_python_mountain_car.ipynb">Github Repo</a> with MIT lisence</p>
-<p>另外，我们采用 epsilon-greedy 的策略，epsilon 采用衰减的方式，一开始为1最后衰减为0，也就是说智能体一开始<strong>勇敢探索</strong>，接下来<strong>贪婪行动</strong>获取最大奖励。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">epsilon = <span class="number">1</span>  <span class="comment"># not a constant, qoing to be decayed</span></span><br><span class="line">START_EPSILON_DECAYING = <span class="number">1</span></span><br><span class="line">END_EPSILON_DECAYING = EPISODES//<span class="number">2</span></span><br><span class="line">epsilon_decay_value = epsilon/(END_EPSILON_DECAYING - START_EPSILON_DECAYING)</span><br></pre></td></tr></table></figure>
+<h3 id="3-查看-Tensorboard"><a href="#3-查看-Tensorboard" class="headerlink" title="3. 查看 Tensorboard"></a>3. 查看 Tensorboard</h3><p>在 Windows 的 CMD 或 Mac/linux 的terminal中在项目目录下输入以下命令: 可得到一个地址和端口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tensorboard --logdir logs</span><br></pre></td></tr></table></figure>
 
-<p>Code from <a target="_blank" rel="noopener" href="https://github.com/zht007/tensorflow-practice/blob/master/10_Renforcement_Learning_Moutain_Car/1_q_learning_python_mountain_car.ipynb">Github Repo</a> with MIT lisence</p>
-<h3 id="3-帮助函数"><a href="#3-帮助函数" class="headerlink" title="3. 帮助函数"></a>3. 帮助函数</h3><p>将环境”离散”化，以适应离散的Q表</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_discrete_state</span> (<span class="params">state</span>):</span></span><br><span class="line">    discrete_state = (state - env.observation_space.low) // discrete_os_win_size</span><br><span class="line">    <span class="keyword">return</span> tuple(discrete_state.astype(int))</span><br></pre></td></tr></table></figure>
-
-<p> epsilon-greedy 策略帮助函数</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">take_epilon_greedy_action</span>(<span class="params">state, epsilon</span>):</span></span><br><span class="line">    discrete_state = get_discrete_state(state)</span><br><span class="line">    <span class="keyword">if</span> np.random.random() &lt; epsilon:</span><br><span class="line">        action = np.random.randint(<span class="number">0</span>,env.action_space.n)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        action = np.argmax(q_table[discrete_state])</span><br><span class="line">    <span class="keyword">return</span> action</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>Code from <a target="_blank" rel="noopener" href="https://github.com/zht007/tensorflow-practice/blob/master/10_Renforcement_Learning_Moutain_Car/1_q_learning_python_mountain_car.ipynb">Github Repo</a> with MIT lisence</p>
-<h3 id="4-训练智能体"><a href="#4-训练智能体" class="headerlink" title="4. 训练智能体"></a>4. 训练智能体</h3><p>Q-learning属于单步Temporal Difference (时间差分TD(0))算法，其通用的更新公式为<br><img src="https://math.jianshu.com/math?formula=Q%5Bs,%20a%5D+=%5Ctext%20%7B%20learning_rate%20%7D%20*%5Cleft(%5Ctext%20%7Btd_target%7D-Q%5Bs,%20a%5D%5Cright)" class="lazyload" data-srcset="https://math.jianshu.com/math?formula=Q%5Bs,%20a%5D+=%5Ctext%20%7B%20learning_rate%20%7D%20*%5Cleft(%5Ctext%20%7Btd_target%7D-Q%5Bs,%20a%5D%5Cright)" srcset="data:image/png;base64,666" alt="Q[s, a]+=\text { learning_rate } *\left(\text {td_target}-Q[s, a]\right)"><br>其中 td_target - Q[s,a] 部分又叫做 TD Error.</p>
-<p><strong>Q-learning:</strong><br><img src="https://math.jianshu.com/math?formula=%5Ctext%20%7B%20td_target%20%7D=R%5Bt+1%5D%20+%20%5Ctext%20%7Bdiscout_factor%7D*max(Q%5Bs%27%5D)" class="lazyload" data-srcset="https://math.jianshu.com/math?formula=%5Ctext%20%7B%20td_target%20%7D=R%5Bt+1%5D%20+%20%5Ctext%20%7Bdiscout_factor%7D*max(Q%5Bs%27%5D)" srcset="data:image/png;base64,666" alt="\text { td_target }=R[t+1] + \text {discout_factor}*max(Q[s&#39;])"></p>
-<p>核心代码如下:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> episode <span class="keyword">in</span> range(EPISODES):</span><br><span class="line">    <span class="comment"># initiate reward every episode</span></span><br><span class="line">    ep_reward = <span class="number">0</span></span><br><span class="line">    state = env.reset()</span><br><span class="line">    done = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> done:</span><br><span class="line">        action = take_epilon_greedy_action(state, epsilon)</span><br><span class="line"></span><br><span class="line">        next_state, reward, done, _ = env.step(action)</span><br><span class="line"></span><br><span class="line">        ep_reward += reward</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> done:</span><br><span class="line"></span><br><span class="line">            td_target = reward + DISCOUNT * np.max(q_table[get_discrete_state(next_state)])</span><br><span class="line"></span><br><span class="line">            q_table[get_discrete_state(state)][action] += LEARNING_RATE * (td_target - q_table[get_discrete_state(state)][action])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">elif</span> next_state[<span class="number">0</span>] &gt;= <span class="number">0.5</span>:</span><br><span class="line">            <span class="comment"># print(&quot;I made it on episode: &#123;&#125; Reward: &#123;&#125;&quot;.format(episode,reward))</span></span><br><span class="line">            q_table[get_discrete_state(state)][action] = <span class="number">0</span></span><br><span class="line">        state = next_state</span><br></pre></td></tr></table></figure>
-
-<p>Code from <a target="_blank" rel="noopener" href="https://github.com/zht007/tensorflow-practice/blob/master/10_Renforcement_Learning_Moutain_Car/1_q_learning_python_mountain_car.ipynb">Github Repo</a> with MIT lisence</p>
-<h3 id="5-查看训练效果"><a href="#5-查看训练效果" class="headerlink" title="5 查看训练效果"></a>5 查看训练效果</h3><p>我们训练了 10000 次，将每500次的平均奖励，最大奖励，最小奖励结果画出来如下：</p>
-<p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1g4persirrzj30ps0ggace.jpg" class="lazyload" data-srcset="http://ww2.sinaimg.cn/large/006tNc79gy1g4persirrzj30ps0ggace.jpg" srcset="data:image/png;base64,666" alt="image-20190705170404949"></p>
-<p>可见，从大慨3000个回合的时候，智能体开始学会如何爬上山顶。</p>
-<p>当然最直观的查看训练效果都方法即将动画render 出来，根据Q表来Render 动画的代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">done = <span class="literal">False</span></span><br><span class="line">state = env.reset()</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">not</span> done:</span><br><span class="line">    action = np.argmax(q_table[get_discrete_state(state)])</span><br><span class="line">    next_state, _, done, _ = env.step(action)</span><br><span class="line">    state = next_state</span><br><span class="line">    env.render()</span><br><span class="line"></span><br><span class="line">env.close()</span><br></pre></td></tr></table></figure>
-
-<p>动画如下：</p>
-<p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1g4pexb3vcag30xc0m8437.gif" class="lazyload" data-srcset="http://ww2.sinaimg.cn/large/006tNc79gy1g4pexb3vcag30xc0m8437.gif" srcset="data:image/png;base64,666" alt="MountainCar-v0"></p>
-<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h3><p>Q - learning 的关键在于如何建立Q-表，特别是处理环境状态为连续的情况，当然我们还会遇到行动空间同样为连续的情况，这种情况该如何处理呢？我们将在后面的文章介绍。</p>
-<hr>
-<p>参考资料</p>
-<p>[1] <a target="_blank" rel="noopener" href="http://incompleteideas.net/book/RLbook2018.pdf">Reinforcement Learning: An Introduction (2nd Edition)</a></p>
-<p>[2] <a target="_blank" rel="noopener" href="http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html">David Silver’s Reinforcement Learning Course (UCL, 2015)</a></p>
-<p>[3] <a target="_blank" rel="noopener" href="https://github.com/dennybritz/reinforcement-learning">Github repo: Reinforcement Learning</a></p>
+<p>其中 “logs” 是我们指定的监听目录的<strong>父目录</strong>，前面我们将带有时间戳的子目录放在这个目录下，该目录下所有的子目录都可以被监听。</p>
+<p>将地址和端口复制到浏览器中即可打开 Tensorboard. Tensorboard 默认没几秒钟就会刷新一次更新数据，当然你也可以手动刷新。</p>
+<p>如果你是使用 Colab 的notebooks，现在 Tensorflow 2.0 也支持直接在 notebook 中查看 tensorboard 了。</p>
+<blockquote>
+<ol>
+<li>在调用 Tensorflow 2.0 的时候 同时调用 tensorboard，仅需一行代码 <code>%load_ext tensorboard</code></li>
+<li>创建完成 <code>summary_writer</code> 后 同样一行代码显示 tensorboard <code>%tensorboard --logdir logs</code></li>
+</ol>
+</blockquote>
+<p>下图就是 tensorboard 中实时显示每个 epoch loss 和 accuracy 的变化，以及每个 epoch 中 每个 step 下 loss 和 accuracy 的变化。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1g9wyvt4hfej30x00u0af7.jpg" class="lazyload" data-srcset="https://tva1.sinaimg.cn/large/006tNbRwgy1g9wyvt4hfej30x00u0af7.jpg" srcset="data:image/png;base64,666" alt="image-20191214214034062"></p>
 <hr>
 <p>相关文章</p>
-<p><a target="_blank" rel="noopener" href="https://steemit.com/cn-stem/@hongtao/mc-21">强化学习——MC(蒙特卡洛)玩21点扑克游戏</a></p>
-<p><a target="_blank" rel="noopener" href="https://steemit.com/cn-stem/@hongtao/dp-mdp">强化学习实战——动态规划(DP)求最优MDP</a></p>
-<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/7atbof">强化学习——强化学习的算法分类</a></p>
-<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/2bqdkd">强化学习——重拾强化学习的核心概念</a></p>
-<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-sarsa">AI学习笔记——Sarsa算法</a></p>
-<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-q-learning">AI学习笔记——Q Learning</a></p>
-<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-dynamic-programming-mdp-1">AI学习笔记——动态规划(Dynamic Programming)解决MDP(1)</a></p>
-<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-dynamic-programming-mdp-2">AI学习笔记——动态规划(Dynamic Programming)解决MDP(2)</a></p>
-<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-mdp-markov-decision-processes">AI学习笔记——MDP(Markov Decision Processes马可夫决策过程)简介</a></p>
-<p><a target="_blank" rel="noopener" href="https://steemit.com/ai/@hongtao/ai-mdp">AI学习笔记——求解最优MDP</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b796823ad32c">Tensorflow2.0-数据加载和预处理</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e68172ba8c91">Tensorflow 2.0 快速入门 —— 引入Keras 自定义模型</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c44705808f7e">Tensorflow 2.0 快速入门 —— 自动求导与线性回归</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/54aa43935c2b">Tensorflow 2.0 轻松实现迁移学习</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/883addf4a1b2">Tensorflow入门——Eager模式像原生Python一样简洁优雅</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9a5ae5d92dba">Tensorflow 2.0 —— 与 Keras 的深度融合</a></p>
 <hr>
-<p>同步到我的简书 <a target="_blank" rel="noopener" href="https://www.jianshu.com/u/bd506afc6fc1">https://www.jianshu.com/u/bd506afc6fc1</a></p>
+<p>首发<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://steemit.com/@hongtao">steemit</a></p>
+<p>欢迎扫描二维码关注我的微信公众号“tensorflow机器学习”，一起学习，共同进步</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/10816620-67b5369ba3a3a00d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/258/format/webp" class="lazyload" data-srcset="https://upload-images.jianshu.io/upload_images/10816620-67b5369ba3a3a00d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/258/format/webp" srcset="data:image/png;base64,666" alt="img"></p>
 
   
   
@@ -501,7 +490,7 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-10-14T22:03:36+01:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-10-14T22:14:36+01:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
     <p>更新于：Oct 14, 2020</p>
@@ -513,7 +502,7 @@
         
           
   
-  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/ML/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>ML</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/RL/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>RL</p></a></div>
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/ML/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>ML</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/tensorflow/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>tensorflow</p></a></div>
 
 
         
@@ -526,7 +515,7 @@
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://example.com/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%20Q-Learning%20%E7%8E%A9%20MountainCar%20%E7%88%AC%E5%9D%A1%E4%B8%8A%E5%B1%B1/&title=强化学习—— Q-Learning 玩 MountainCar 爬坡上山 - Hongtao's Blog&summary="
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://example.com/2020/02/14/Tensorflow2.0--%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7%EF%BC%9ATensorboard/&title=Tensorflow2.0--可视化工具：Tensorboard - Hongtao's Blog&summary="
           
           >
           
@@ -538,7 +527,7 @@
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://example.com/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%20Q-Learning%20%E7%8E%A9%20MountainCar%20%E7%88%AC%E5%9D%A1%E4%B8%8A%E5%B1%B1/&title=强化学习—— Q-Learning 玩 MountainCar 爬坡上山 - Hongtao's Blog&summary="
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://example.com/2020/02/14/Tensorflow2.0--%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7%EF%BC%9ATensorboard/&title=Tensorflow2.0--可视化工具：Tensorboard - Hongtao's Blog&summary="
           
           >
           
@@ -550,7 +539,7 @@
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://service.weibo.com/share/share.php?url=http://example.com/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%20Q-Learning%20%E7%8E%A9%20MountainCar%20%E7%88%AC%E5%9D%A1%E4%B8%8A%E5%B1%B1/&title=强化学习—— Q-Learning 玩 MountainCar 爬坡上山 - Hongtao's Blog&summary="
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://example.com/2020/02/14/Tensorflow2.0--%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7%EF%BC%9ATensorboard/&title=Tensorflow2.0--可视化工具：Tensorboard - Hongtao's Blog&summary="
           
           >
           
@@ -580,18 +569,17 @@
   
     <div class="prev-next">
       
-        <a class='prev' href='/2020/02/13/%E3%80%90%E6%95%99%E7%A8%8B%E3%80%91Tensorflow%20vs%20PyTorch%20%E2%80%94%E2%80%94%20%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/'>
-          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>【教程】Tensorflow vs PyTorch —— 基本操作</p>
-          <p class='content'>
-Tensorflow 和 PyTorch 的基本操作非常类似，大多数方法都是相通的，如果有 numpy 的基础，掌握起来就更加容易了。基本操作涉及到张量的初始化，切片索引，维度变换和合并拆分等...</p>
+        <a class='prev' href='/2020/02/14/Tensorflow2.0%20%E6%B7%B1%E5%BA%A6%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94Policy%20Gradient/'>
+          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>Tensorflow2.0 深度强化学习——Policy Gradient</p>
+          <p class='content'>image from unsplash.com by @jodaarba
+在之前的文章中我们系统地介绍了强化学习，以及与神经网络相结合的深度强化学习。期间由于 Tensorflow 2.0 尚未...</p>
         </a>
       
       
-        <a class='next' href='/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%20SARSA%20%E5%92%8C%20SARSA%20lambda%20%E7%8E%A9%20MountainCar%20%E7%88%AC%E5%9D%A1%E4%B8%8A%E5%B1%B1/'>
-          <p class='title'>强化学习—— SARSA 和 SARSA lambda 玩 MountainCar 爬坡上山<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+        <a class='next' href='/2020/02/13/%E3%80%90%E6%95%99%E7%A8%8B%E3%80%91Tensorflow%20vs%20PyTorch%20%E2%80%94%E2%80%94%20%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/'>
+          <p class='title'>【教程】Tensorflow vs PyTorch —— 基本操作<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
           <p class='content'>
-Image from unsplash.com by Jonatan Pie
-上一篇文章我们介绍了用 Q-learning 的算法完成了小车爬坡上山的游戏，这篇文章我们来讲讲如何用 SARSA...</p>
+Tensorflow 和 PyTorch 的基本操作非常类似，大多数方法都是相通的，如果有 numpy 的基础，掌握起来就更加容易了。基本操作涉及到张量的初始化，切片索引，维度变换和合并拆分等...</p>
         </a>
       
     </div>
@@ -634,7 +622,7 @@ Image from unsplash.com by Jonatan Pie
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Gym-%E7%8E%AF%E5%A2%83%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">1. Gym 环境初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Q-Table-%E7%9A%84%E5%BB%BA%E7%AB%8B"><span class="toc-text">2. Q-Table 的建立</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%B8%AE%E5%8A%A9%E5%87%BD%E6%95%B0"><span class="toc-text">3. 帮助函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%AE%AD%E7%BB%83%E6%99%BA%E8%83%BD%E4%BD%93"><span class="toc-text">4. 训练智能体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%9F%A5%E7%9C%8B%E8%AE%AD%E7%BB%83%E6%95%88%E6%9E%9C"><span class="toc-text">5 查看训练效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%80%BB%E7%BB%93"><span class="toc-text">6. 总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Tensorboard-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-text">1. Tensorboard 工作原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Tensorboard-%E7%9B%91%E5%90%AC%E5%8F%98%E9%87%8F"><span class="toc-text">2.  Tensorboard 监听变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9F%A5%E7%9C%8B-Tensorboard"><span class="toc-text">3. 查看 Tensorboard</span></a></li></ol>
     </div>
   </section>
 
@@ -654,7 +642,7 @@ Image from unsplash.com by Jonatan Pie
 <script>
   window.pdata={}
   pdata.ispage=true;
-  pdata.postTitle="强化学习—— Q-Learning 玩 MountainCar 爬坡上山";
+  pdata.postTitle="Tensorflow2.0--可视化工具：Tensorboard";
   pdata.commentPath="";
   pdata.commentPlaceholder="";
 
