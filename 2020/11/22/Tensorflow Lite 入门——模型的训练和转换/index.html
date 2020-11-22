@@ -5,8 +5,6 @@
   <!-- SEO相关 -->
   
     
-      <meta name="robots" content="noindex,follow">
-    
   
   <!-- 渲染优化 -->
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -21,7 +19,9 @@
 
   <!-- 页面元数据 -->
   
-  <title>Tag: RL - Hongtao&#39;s Blog</title>
+  <title>Tensorflow入门——Keras简介和上手 - Hongtao&#39;s Blog</title>
+  
+    <meta name="keywords" content="ML,TF2.0,TFLite">
   
 
   
@@ -316,7 +316,7 @@
     <div id="l_cover">
   
     
-        <div id="full" class='cover-wrapper  dock' style="display: none;">
+        <div id="full" class='cover-wrapper post dock' style="display: none;">
           
             <div class='cover-bg lazyload placeholder' data-bg="https://source.unsplash.com/random"></div>
           
@@ -347,460 +347,242 @@
       <div class='body-wrapper' id="pjax-container">
         
 
-
 <div class='l_main'>
+  <article class="article post white-box reveal md shadow article-type-post" id="post" itemscope itemprop="blogPost">
   
+
+
+  
+  <div class="article-meta" id="top">
     
-      
-  <section class="post-list">
     
-      
+    
+      <h1 class="title">
+        Tensorflow入门——Keras简介和上手
+      </h1>
+      <div class='new-meta-box'>
         
+          
+            
+<div class='new-meta-item author'>
+  <a class='author' href="/" rel="nofollow">
+    <img no-lazy src="">
+    <p>请设置文章作者</p>
+  </a>
+</div>
+
           
         
           
-        
+            
+
           
         
           
-        
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：Nov 22, 2020</p>
+  </a>
+</div>
+
           
         
           
-        
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="Tensorflow入门——Keras简介和上手" data-path="/2020/11/22/Tensorflow%20Lite%20%E5%85%A5%E9%97%A8%E2%80%94%E2%80%94%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%AD%E7%BB%83%E5%92%8C%E8%BD%AC%E6%8D%A2/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
           
         
+      </div>
+    
+  </div>
+
+
+  
+  <p>之前的文章中介绍的使用 Tensorflow 训练的模型要么只能运行在 PC 端，要么需要云端的支持。随着智能手机和物联网设备的普及，能够在智能手机甚至嵌入式设备直接运行的模型需求就越来越高。这篇文章就开始介绍 Tensorflow Lite, 这个能够运行在智能手机和 嵌入式设备的开源深度学习框架。</p>
+<p>通常，我们会在 PC 或者云端建立模型，并对模型进行训练，然后将模型转换成 Tensorflow Lite 的格式，并最终部署到终端设备上，这篇文章我们就用 Fashion MNIST 的数据集，建立并训练模型，并采用模拟器的方式部署到终端设备上进行测试。</p>
+<h3 id="1-数据的加载和训练"><a href="#1-数据的加载和训练" class="headerlink" title="1. 数据的加载和训练"></a>1. 数据的加载和训练</h3><p>这个部分的内容与之前Tensorflow 2.0 快速入门内容重复，在这里就不过多赘述了。但是值得注意的是，之前的文章我们都是使用的  keras 的数据集，其数据格式是 numpy。Fasion MINST 是从 <code>tensorflow_datasets</code> 中直接加载的。将数据集分为 80% 训练集，10% 测试集和10%验证集。tfds的详细使用说明请参考<a target="_blank" rel="noopener" href="https://www.tensorflow.org/datasets/api_docs/python/tfds/load">官方文档</a>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow_datasets <span class="keyword">as</span> tfds</span><br><span class="line"></span><br><span class="line">splits, info = tfds.load(<span class="string">&#x27;fashion_mnist&#x27;</span>, with_info=<span class="literal">True</span>, as_supervised=<span class="literal">True</span>, </span><br><span class="line">                         split=[<span class="string">&#x27;train[:80%]&#x27;</span>, <span class="string">&#x27;train[80%:90%]&#x27;</span>, <span class="string">&#x27;train[90%:]&#x27;</span>])</span><br><span class="line"></span><br><span class="line">(train_examples, validation_examples, test_examples) = splits</span><br><span class="line"></span><br><span class="line">num_examples = info.splits[<span class="string">&#x27;train&#x27;</span>].num_examples</span><br><span class="line">num_classes = info.features[<span class="string">&#x27;label&#x27;</span>].num_classes</span><br></pre></td></tr></table></figure>
+
+<p>数据经过预处理之后，我们使用 Keras 的 API 快速搭建了一个五层的 CNN 神经网络并使用 <code>model.fit</code> 对模型进行了训练。</p>
+<h3 id="2-模型的保存与转换"><a href="#2-模型的保存与转换" class="headerlink" title="2. 模型的保存与转换"></a>2. 模型的保存与转换</h3><p>训练好的模型这里使用了 tf.save_model.save() 将模型保存在了指定目录。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export_dir = <span class="string">&#x27;saved_model/1&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Use the tf.saved_model API to export the SavedModel</span></span><br><span class="line">tf.saved_model.save(model, export_dir)</span><br></pre></td></tr></table></figure>
+
+<p>本文的重点是模型转换，在Tensorflow Lite 中，使用 <code>TFLiteCoverter</code> 可以轻松将模型转换成 Tensorflow Lite 的模型。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Use the TFLiteConverter SavedModel API to initialize the converter</span></span><br><span class="line">converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir=export_dir)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Invoke the converter to finally generate the TFLite model</span></span><br><span class="line">tflite_model = converter.convert()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Save the model file as &#x27;model.tflite&#x27;</span></span><br><span class="line">tflite_model_file = <span class="string">&#x27;model.tflite&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(tflite_model_file, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">  f.write(tflite_model)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-模型的优化"><a href="#3-模型的优化" class="headerlink" title="3. 模型的优化"></a>3. 模型的优化</h3><p>converter 在默认的情况下是将模型权重从32位浮点数转换成8位整数从而大大减小模型的大小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">converter.optimizations = [tf.lite.Optimize.DEFAULT]</span><br></pre></td></tr></table></figure>
+
+<p>我们也可以将模型手动调整为16位浮点数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">converter.optimizations = [tf.lite.Optimize.DEFAULT]</span><br><span class="line">converter.target_spec.supported_types = [tf.float16]</span><br></pre></td></tr></table></figure>
+
+<p>当然除了 default 模式，官方也提供了精度优先和大小优先的优化模式，详细内容参考<a target="_blank" rel="noopener" href="https://www.tensorflow.org/lite/performance/post_training_quantization">官方文档</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tf.lite.Optimize.OPTIMIZE_FOR_LATENCY</span><br><span class="line">tf.lite.Optimize.OPTIMIZE_FOR_SIZE</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-模型测试"><a href="#4-模型测试" class="headerlink" title="4. 模型测试"></a>4. 模型测试</h3><p>到这里，实际上我们就可以将转换成 Tensorflow Lite 的模型部署到设备上进行测试了，但是此时，我们并不知道模型的性能如何，Tensorflow Lite 提供了模拟器，我们可以轻松部署在模拟器上对转换后的模型进行测试。</p>
+<p>测试模型分为三步，</p>
+<blockquote>
+<p>第一步：加载 TFLite 模型，部署tensor</p>
+<p>第二步：获取 input 和 output index    </p>
+<p>第三步：加载数据并获取结果</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Step 1: Load TFLite model and allocate tensors.</span></span><br><span class="line">interpreter = tf.lite.Interpreter(model_content=tflite_model)</span><br><span class="line">interpreter.allocate_tensors()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 2: Get input and output tensors index</span></span><br><span class="line">input_index = interpreter.get_input_details()[<span class="number">0</span>][<span class="string">&quot;index&quot;</span>]</span><br><span class="line">output_index = interpreter.get_output_details()[<span class="number">0</span>][<span class="string">&quot;index&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 3: Get results</span></span><br><span class="line">interpreter.set_tensor(input_index, img)</span><br><span class="line">interpreter.invoke()</span><br><span class="line">predictions = interpreter.get_tensor(output_index)</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h3><p>Tensorflow Lite 在PC 或者云端的训练和测试可以分为三个步骤： 1. 数据加载，模型搭建与的训练。2. 模型的保存与转换。3.模型的测试。</p>
+<p>经过这三个步骤之后，我们就可以将转换后的模型部署在终端设备上了，Tensorflow Lite 不仅可以支持 Android 和 iOS 的智能手机也支持raspberry pi 智能手环这样的嵌入式设备，如果有机会将在后面的文章中给大家介绍。</p>
+<hr>
+<p>相关文章</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU4NTg4MjM2NA==&mid=2247483840&idx=1&sn=c17099fc9edce78e8055e086f84c8be6&chksm=fd828e53caf50745d03126b4e85361a3a8cfa4defb2284584e6317eae78d007f995cd5136500&token=698937485&lang=zh_CN&scene=21#wechat_redirect">强化学习——轻松用 Keras 一步一步搭建DQN模型</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU4NTg4MjM2NA==&mid=2247483831&idx=1&sn=61073043c3d2ad9f6a5e85347a10fac1&chksm=fd828e24caf5073290c9ac5dae2bd005097a0d4612ca176a57ea093045dca4993799354703e9&token=698937485&lang=zh_CN&scene=21#wechat_redirect">DQN——图解并轻松上手深度Q-Learning</a><br><a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzU4NTg4MjM2NA==&mid=2247483821&idx=2&sn=4726fa197e78755891b2b681412e75bf&chksm=fd828e3ecaf50728d2597339ced0ec6a0664f51cbab6472c5a25160b532ce87dd871b1b9ba38&token=466152961&lang=zh_CN&scene=21#wechat_redirect">AI学习笔记——MDP(Markov Decision Processes马可夫决策过程)简介</a><br><a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzU4NTg4MjM2NA==&mid=2247483786&idx=1&sn=e556e3e4e496b7327243d21888633c7a&chksm=fd828e19caf5070fa54e91ce7c66622d11f3e3e25d53519945465aec6b0debad3b4ea1a232c5&token=466152961&lang=zh_CN&scene=21#wechat_redirect">AI学习笔记——Q Learning</a><br><a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzU4NTg4MjM2NA==&mid=2247483811&idx=2&sn=9971b5573f8fba3fb1b28a8725c33f24&chksm=fd828e30caf50726640e84039233759525662fbe73c24db7c15577dec9888263fbf56ed71371&token=466152961&lang=zh_CN&scene=21#wechat_redirect">AI学习笔记——Sarsa算法</a><br><a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzU4NTg4MjM2NA==&mid=2247483720&idx=4&sn=5f2d6075cd43e0efad614d2f0199a44b&chksm=fd828edbcaf507cde0f73fce3ca2bc3fef8b525764c51fd35e9a2f714109f5e6a4f25531371c&token=466152961&lang=zh_CN&scene=21#wechat_redirect">AI学习笔记——卷积神经网络（CNN）</a></p>
+
+  
+  
+    
+    <div class='footer'>
+      
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容优先发布于本人微信公众号“Tensorflow机器学习”，欢迎关注，转载请注明出处</p>
+
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-11-22T17:30:40+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：Nov 22, 2020</p>
+  </a>
+</div>
+
+        
+      
+        
           
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/ML/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>ML</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/TF2-0/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>TF2.0</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/TFLite/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>TFLite</p></a></div>
+
+
+        
+      
         
           
-        
-      
-    
-    
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/02/14/Tensorflow%202.0%20%E8%BD%BB%E6%9D%BE%E5%AE%9E%E7%8E%B0%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/">
-        Tensorflow 2.0 轻松实现迁移学习
-      </a>
-    </h2>
-  
-  <div class='md'>
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
     
       
-        
-image from unsplash by Gábor Juhász
-迁移学习即利用已有的知识来学习新的知识，与人类类似，比如你学会了用笔画画，也就可以学习用笔来画画，并不用从头学习握笔的姿势。对于机器学习来说，可以用现有的已经经过训练的模型，来训练我们自己的模型，并没有必要从头训练。
-以图像识别的神经网络模型为例，我们可以使用已经在 Image Net 上训练过的模型直接训练我们自己的...
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://example.com/2020/11/22/Tensorflow%20Lite%20%E5%85%A5%E9%97%A8%E2%80%94%E2%80%94%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%AD%E7%BB%83%E5%92%8C%E8%BD%AC%E6%8D%A2/&title=Tensorflow入门——Keras简介和上手 - Hongtao's Blog&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,666">
+          
+        </a>
       
     
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-02-14</time>
-        
-      </div>
       
-        <div>
-          <a class='readmore' href='/2020/02/14/Tensorflow%202.0%20%E8%BD%BB%E6%9D%BE%E5%AE%9E%E7%8E%B0%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/'>
-            Read More
-          </a>
-        </div>
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://example.com/2020/11/22/Tensorflow%20Lite%20%E5%85%A5%E9%97%A8%E2%80%94%E2%80%94%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%AD%E7%BB%83%E5%92%8C%E8%BD%AC%E6%8D%A2/&title=Tensorflow入门——Keras简介和上手 - Hongtao's Blog&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,666">
+          
+        </a>
       
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/02/14/Tensorflow2.0%20%E6%B7%B1%E5%BA%A6%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94Policy%20Gradient/">
-        Tensorflow2.0 深度强化学习——Policy Gradient
-      </a>
-    </h2>
-  
-  <div class='md'>
     
       
-        image from unsplash.com by @jodaarba
-在之前的文章中我们系统地介绍了强化学习，以及与神经网络相结合的深度强化学习。期间由于 Tensorflow 2.0 尚未正式发布，大多数代码均使用 Tensorflow 1.x 或者 Keras 实现的，今后我们逐渐会用 Tensorflow 2.x 或者 PyTorch 更新代码，同时借机复习相关知识。
-这篇文章我们...
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://example.com/2020/11/22/Tensorflow%20Lite%20%E5%85%A5%E9%97%A8%E2%80%94%E2%80%94%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%AD%E7%BB%83%E5%92%8C%E8%BD%AC%E6%8D%A2/&title=Tensorflow入门——Keras简介和上手 - Hongtao's Blog&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+    
       
     
   </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-02-14</time>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/02/14/Tensorflow2.0%20%E6%B7%B1%E5%BA%A6%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94Policy%20Gradient/'>
-            Read More
-          </a>
-        </div>
-      
-    </div>
-  
-
 </div>
 
-          </div>
+
+
         
       
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%20Q-Learning%20%E7%8E%A9%20MountainCar%20%E7%88%AC%E5%9D%A1%E4%B8%8A%E5%B1%B1/">
-        强化学习—— Q-Learning 玩 MountainCar 爬坡上山
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        之前的文章结合理论和实践熟悉了 Q-Learning 的经典算法，这篇文章我们基于 Open AI 的经典 MountainCar 环境。用 python 代码实现 Q-Learning  算法，完成小车爬坡上山的挑战。
-同样的，为了方便与读者交流，所有的代码都放在了这里：
-https://github.com/zht007/tensorflow-practice
-1. Gym 环境初始化要...
-      
-    
+    </div>
   </div>
+
+
   
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-01-14</time>
-        
-      </div>
+  
+
+  
+    <div class="prev-next">
       
-        <div>
-          <a class='readmore' href='/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%20Q-Learning%20%E7%8E%A9%20MountainCar%20%E7%88%AC%E5%9D%A1%E4%B8%8A%E5%B1%B1/'>
-            Read More
-          </a>
-        </div>
+      
+        <a class='next' href='/2020/03/19/%E3%80%90%E6%95%99%E7%A8%8B%E3%80%91Tensorflow%20vs%20PyTorch%20%E2%80%94%E2%80%94%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/'>
+          <p class='title'>【教程】Tensorflow vs PyTorch —— 卷积神经网络<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>
+image from unsplash.com by @jmnse
+卷积神经网络在之前的文章中介绍过，这里不再赘述，主要对比一下如何使用 Tensorflow 和 PyTorch 搭建卷积神经...</p>
+        </a>
       
     </div>
   
+</article>
 
+
+  
+
+  <article class="post white-box reveal shadow" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
 </div>
 
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%20SARSA%20%E5%92%8C%20SARSA%20lambda%20%E7%8E%A9%20MountainCar%20%E7%88%AC%E5%9D%A1%E4%B8%8A%E5%B1%B1/">
-        强化学习—— SARSA 和 SARSA lambda 玩 MountainCar 爬坡上山
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        
-Image from unsplash.com by Jonatan Pie
-上一篇文章我们介绍了用 Q-learning 的算法完成了小车爬坡上山的游戏，这篇文章我们来讲讲如何用 SARSA 算法完成同样挑战。
-1. Q-Learning 和 SARSA 异同Q - Learning 和 SARSA 有很多相似之处，他们均属于单步Temporal Difference (时间差分TD(0...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-01-14</time>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%20SARSA%20%E5%92%8C%20SARSA%20lambda%20%E7%8E%A9%20MountainCar%20%E7%88%AC%E5%9D%A1%E4%B8%8A%E5%B1%B1/'>
-            Read More
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94MC(%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B)%E7%8E%A921%E7%82%B9%E6%89%91%E5%85%8B%E6%B8%B8%E6%88%8F/">
-        强化学习——MC(蒙特卡洛)玩21点扑克游戏
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        通过理论和实战，我们知道，在已知的MDP环境下，可以用动态规划(DP)的方法来获得最佳策略，指导智能体(Agent)行动。DP方法要求环境是已知的，然而实际上我们会遇到更多未知的环境，这个时候就需要用其他方法了。之前的文章介绍过MC和TD (Temporal-Defference) 的理论，这篇文章就用MC方法来玩21点扑克牌游戏。
-同样的，为了方便与读者交流，所有的代码都放在了这里：
-ht...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-01-14</time>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94MC(%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B)%E7%8E%A921%E7%82%B9%E6%89%91%E5%85%8B%E6%B8%B8%E6%88%8F/'>
-            Read More
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94Q-Learning%20SARSA%20%E7%8E%A9Carpole%E7%BB%8F%E5%85%B8%E6%B8%B8%E6%88%8F/">
-        强化学习——Q-Learning SARSA 玩Carpole经典游戏
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        
-Image from unsplash.com by Ferdinand Stöhr
-前文我们讲了如何用Q-learning 和 SARSA 玩推小车上山的游戏，这篇文章我们探讨一下如何完成Carpole平衡杆的游戏。
-同样的，为了方便与读者交流，所有的代码都放在了这里：
-https://github.com/zht007/tensorflow-practice
-1. 环境分析关于cart...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-01-14</time>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94Q-Learning%20SARSA%20%E7%8E%A9Carpole%E7%BB%8F%E5%85%B8%E6%B8%B8%E6%88%8F/'>
-            Read More
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94Q-Learing%E5%92%8CSASAR%E6%82%AC%E5%B4%96%E6%8E%A2%E5%AE%9D/">
-        强化学习实战——Q-Learing和SASAR悬崖探宝
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        
-image source from unsplash.com by Daniel Cheung
-之前我们介绍了Q-learning和SASAR算法的理论，这篇文章就理论结合实际用Q-learning 和SASAR算法指导智能体，完成悬崖探宝任务。
-同样的，为了方便与读者交流，所有的代码都放在了这里：
-https://github.com/zht007/tensorflow-practice...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-01-14</time>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94Q-Learing%E5%92%8CSASAR%E6%82%AC%E5%B4%96%E6%8E%A2%E5%AE%9D/'>
-            Read More
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92(DP)%E6%B1%82%E6%9C%80%E4%BC%98MDP/">
-        强化学习实战——动态规划(DP)求最优MDP
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        
- image source from unsplash by Stijin te Strake
-之前的文章介绍了用动态规划(DP: Dynamic Programming)求解最优MDP的理论。DP求解最优MPD有两个方法，一是策略迭代(Policy Iteration)**，另一个就是值迭代(Value Iteration)**。本篇文章就用Python编程实践这个理论。
-同样的，为了方...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-01-14</time>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92(DP)%E6%B1%82%E6%9C%80%E4%BC%98MDP/'>
-            Read More
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%EF%BC%9A%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E2%80%94%E2%80%94Carla%20%E6%A8%A1%E6%8B%9F%E5%99%A8%E7%AE%80%E4%BB%8B/">
-        强化学习：自动驾驶——Carla 模拟器简介
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        自动驾驶是机器学习的一个重要的应用领域，作为普通学习者，我们是否可以运用自己学到的机器学习方法训练自动驾驶模型，完成自动驾驶的任务呢？是否需要一辆真实的汽车和真实的马路环境呢？
-对于普通学习者来说，我们当然没有必要去驾驶真实的汽车。使用模拟器可以大大降低自动驾驶研究的门槛，这篇文章我们就简单地介绍一下 Carla 这个开源的用于自动驾驶研究的开源模拟器。
-1. CARLA 简介Carla 是...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-01-14</time>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/01/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%EF%BC%9A%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E2%80%94%E2%80%94Carla%20%E6%A8%A1%E6%8B%9F%E5%99%A8%E7%AE%80%E4%BB%8B/'>
-            Read More
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
-    
-  </section>
-  
-    
-  
+  </article>
 
 
-    
-  
+
+
+
+
 </div>
 <aside class='l_side'>
   
@@ -808,103 +590,28 @@ https://github.com/zht007/tensorflow-practice...
     
     
 
-<section class="widget blogger shadow desktop mobile">
-  <div class='content'>
-    
-      
-        <a class='avatar flat-box rectangle' href='/about/'>
-          <img no-lazy src='https://camo.githubusercontent.com/8e3118c2f52688594bf37371d73165c13ddbf305/68747470733a2f2f747661312e73696e61696d672e636e2f6c617267652f303038327a7962706779316762747679346c64716e6a3330373630373630746e2e6a7067'/>
-        </a>
-      
-    
-    
-      <div class='text'>
-        
-        
-          <p>欢迎关注微信公众号“Tensorflow机器学习”</p>
 
-        
-        
-      </div>
-    
-    
-      <div class="social-wrapper">
-        
-          
-            <a href="/atom.xml"
-              class="social fas fa-rss flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-              
-            </a>
-          
-        
-          
-            <a href="mailto:me@xxx.com"
-              class="social fas fa-envelope flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-              
-            </a>
-          
-        
-          
-            <a href="https://github.com/volantis-x/"
-              class="social fab fa-github flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-              
-            </a>
-          
-        
-          
-            <a href="/"
-              class="social fas fa-headphones-alt flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-              
-            </a>
-          
-        
-      </div>
-    
-  </div>
-</section>
 
-  
-
-  
-    
-    
-
-  
-
-  
-    
-    
-  
-
-  <section class="widget tagcloud shadow desktop mobile">
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
     
   <header>
     
-      <a href='/blog/tags/'><i class="fas fa-tags fa-fw" aria-hidden="true"></i><span class='name'>热门标签</span></a>
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
     
   </header>
 
 
     <div class='content'>
-      <a href="/tags/ML/" style="font-size: 24px; color: #555">ML</a> <a href="/tags/RL/" style="font-size: 18px; color: #7e7e7e">RL</a> <a href="/tags/TF1-0/" style="font-size: 20px; color: #707070">TF1.0</a> <a href="/tags/TF2-0/" style="font-size: 14px; color: #999">TF2.0</a> <a href="/tags/TFLite/" style="font-size: 14px; color: #999">TFLite</a> <a href="/tags/pytorch/" style="font-size: 16px; color: #8b8b8b">pytorch</a> <a href="/tags/tensorflow/" style="font-size: 22px; color: #636363">tensorflow</a> <a href="/tags/tutorial/" style="font-size: 16px; color: #8b8b8b">tutorial</a>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%95%B0%E6%8D%AE%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%92%8C%E8%AE%AD%E7%BB%83"><span class="toc-text">1. 数据的加载和训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BF%9D%E5%AD%98%E4%B8%8E%E8%BD%AC%E6%8D%A2"><span class="toc-text">2. 模型的保存与转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BC%98%E5%8C%96"><span class="toc-text">3. 模型的优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%A8%A1%E5%9E%8B%E6%B5%8B%E8%AF%95"><span class="toc-text">4. 模型测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93"><span class="toc-text">5. 总结</span></a></li></ol>
     </div>
   </section>
 
 
   
 
-  
-
 
 </aside>
+
 
 
         
@@ -914,8 +621,8 @@ https://github.com/zht007/tensorflow-practice...
 
 <script>
   window.pdata={}
-  pdata.ispage=false;
-  pdata.postTitle="";
+  pdata.ispage=true;
+  pdata.postTitle="Tensorflow入门——Keras简介和上手";
   pdata.commentPath="";
   pdata.commentPlaceholder="";
 
